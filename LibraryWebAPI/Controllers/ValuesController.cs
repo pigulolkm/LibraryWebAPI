@@ -8,7 +8,6 @@ using LibraryWebAPI.Models;
 
 namespace LibraryWebAPI.Controllers
 {
-    [RoutePrefix("api/values")]
     public class ValuesController : ApiController
     {
         /*
@@ -39,9 +38,6 @@ namespace LibraryWebAPI.Controllers
         {
         }
          */
-
-        // Get api/values
-        [Route("")]
         public IEnumerable<LibraryUser> Get()
         {
             LibraryEntities dbcontext = new LibraryEntities();
@@ -51,9 +47,7 @@ namespace LibraryWebAPI.Controllers
 
             return lu;
         }
-        
-        // Get api/values/id
-        [Route("{id:int}")]
+
         public LibraryUser GetlibraryUser(int id)
         {
             LibraryEntities dbcontext = new LibraryEntities();
