@@ -6,8 +6,36 @@
     <edmx:StorageModels>
       <Schema Namespace="LibraryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="LibraryModelStoreContainer">
+          <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Store.Borrowing_record" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="LibraryUser" EntityType="LibraryModel.Store.LibraryUser" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="B_id" />
+          </Key>
+          <Property Name="B_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="B_author" Type="nvarchar(max)" />
+          <Property Name="B_title" Type="nvarchar(max)" />
+          <Property Name="B_ISBN" Type="nvarchar(max)" />
+          <Property Name="B_publisher" Type="nvarchar(max)" />
+          <Property Name="B_publicationDate" Type="datetime" />
+          <Property Name="B_subject" Type="nvarchar(max)" />
+          <Property Name="B_language" Type="nvarchar(max)" />
+          <Property Name="B_datetime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Borrowing_record">
+          <Key>
+            <PropertyRef Name="BR_id" />
+          </Key>
+          <Property Name="BR_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="B_id" Type="int" />
+          <Property Name="L_id" Type="int" />
+          <Property Name="BR_datetime" Type="datetime" />
+          <Property Name="BR_renewalTimes" Type="int" />
+          <Property Name="BR_returnedDate" Type="datetime" />
+          <Property Name="BR_shouldReturnedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="LibraryUser">
           <Key>
             <PropertyRef Name="L_id" />
@@ -15,14 +43,14 @@
           <Property Name="L_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="L_firstName" Type="nvarchar(max)" />
           <Property Name="L_lastName" Type="nvarchar(max)" />
-          <Property Name="L_phoneNo" Type="int" />
+          <Property Name="L_phoneNo" Type="nvarchar(max)" />
           <Property Name="L_email" Type="nvarchar(max)" />
-          <Property Name="L_IDNo" Type="nvarchar(max)" />
+          <Property Name="L_IDNO" Type="nvarchar(max)" />
           <Property Name="L_birthday" Type="datetime" />
           <Property Name="L_password" Type="nvarchar(max)" />
           <Property Name="L_accessRight" Type="nvarchar(max)" />
           <Property Name="L_registerDatetime" Type="datetime" />
-          <Property Name="L_isBan" Type="bit" Nullable="false" />
+          <Property Name="L_isBan" Type="bit" />
         </EntityType>
       </Schema>
     </edmx:StorageModels>
@@ -30,8 +58,36 @@
     <edmx:ConceptualModels>
       <Schema Namespace="LibraryModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="LibraryEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Books" EntityType="LibraryModel.Book" />
+          <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Borrowing_record" />
           <EntitySet Name="LibraryUsers" EntityType="LibraryModel.LibraryUser" />
         </EntityContainer>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="B_id" />
+          </Key>
+          <Property Name="B_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="B_author" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_title" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_ISBN" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_publisher" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_publicationDate" Type="DateTime" Precision="3" />
+          <Property Name="B_subject" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_language" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_datetime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Borrowing_record">
+          <Key>
+            <PropertyRef Name="BR_id" />
+          </Key>
+          <Property Name="BR_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="B_id" Type="Int32" />
+          <Property Name="L_id" Type="Int32" />
+          <Property Name="BR_datetime" Type="DateTime" Precision="3" />
+          <Property Name="BR_renewalTimes" Type="Int32" />
+          <Property Name="BR_returnedDate" Type="DateTime" Precision="3" />
+          <Property Name="BR_shouldReturnedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityType Name="LibraryUser">
           <Key>
             <PropertyRef Name="L_id" />
@@ -39,14 +95,14 @@
           <Property Name="L_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="L_firstName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_lastName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_phoneNo" Type="Int32" />
+          <Property Name="L_phoneNo" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_IDNo" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="L_IDNO" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_birthday" Type="DateTime" Precision="3" />
           <Property Name="L_password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_accessRight" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_registerDatetime" Type="DateTime" Precision="3" />
-          <Property Name="L_isBan" Type="Boolean" Nullable="false" />
+          <Property Name="L_isBan" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -54,6 +110,34 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="LibraryModelStoreContainer" CdmEntityContainer="LibraryEntities">
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="LibraryModel.Book">
+              <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="B_id" ColumnName="B_id" />
+                <ScalarProperty Name="B_author" ColumnName="B_author" />
+                <ScalarProperty Name="B_title" ColumnName="B_title" />
+                <ScalarProperty Name="B_ISBN" ColumnName="B_ISBN" />
+                <ScalarProperty Name="B_publisher" ColumnName="B_publisher" />
+                <ScalarProperty Name="B_publicationDate" ColumnName="B_publicationDate" />
+                <ScalarProperty Name="B_subject" ColumnName="B_subject" />
+                <ScalarProperty Name="B_language" ColumnName="B_language" />
+                <ScalarProperty Name="B_datetime" ColumnName="B_datetime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Borrowing_record">
+            <EntityTypeMapping TypeName="LibraryModel.Borrowing_record">
+              <MappingFragment StoreEntitySet="Borrowing_record">
+                <ScalarProperty Name="BR_id" ColumnName="BR_id" />
+                <ScalarProperty Name="B_id" ColumnName="B_id" />
+                <ScalarProperty Name="L_id" ColumnName="L_id" />
+                <ScalarProperty Name="BR_datetime" ColumnName="BR_datetime" />
+                <ScalarProperty Name="BR_renewalTimes" ColumnName="BR_renewalTimes" />
+                <ScalarProperty Name="BR_returnedDate" ColumnName="BR_returnedDate" />
+                <ScalarProperty Name="BR_shouldReturnedDate" ColumnName="BR_shouldReturnedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="LibraryUsers">
             <EntityTypeMapping TypeName="LibraryModel.LibraryUser">
               <MappingFragment StoreEntitySet="LibraryUser">
@@ -62,7 +146,7 @@
                 <ScalarProperty Name="L_lastName" ColumnName="L_lastName" />
                 <ScalarProperty Name="L_phoneNo" ColumnName="L_phoneNo" />
                 <ScalarProperty Name="L_email" ColumnName="L_email" />
-                <ScalarProperty Name="L_IDNo" ColumnName="L_IDNo" />
+                <ScalarProperty Name="L_IDNO" ColumnName="L_IDNO" />
                 <ScalarProperty Name="L_birthday" ColumnName="L_birthday" />
                 <ScalarProperty Name="L_password" ColumnName="L_password" />
                 <ScalarProperty Name="L_accessRight" ColumnName="L_accessRight" />

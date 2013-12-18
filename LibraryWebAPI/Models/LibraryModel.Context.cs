@@ -25,6 +25,8 @@ namespace LibraryWebAPI.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Borrowing_record> Borrowing_record { get; set; }
         public DbSet<LibraryUser> LibraryUsers { get; set; }
     }
 }

@@ -17,13 +17,13 @@ namespace LibraryWebAPI.Models
         public int L_id { get; set; }
         public string L_firstName { get; set; }
         public string L_lastName { get; set; }
-        public Nullable<int> L_phoneNo { get; set; }
+        public string L_phoneNo { get; set; }
         public string L_email { get; set; }
-        public string L_IDNo { get; set; }
+        public string L_IDNO { get; set; }
         public Nullable<System.DateTime> L_birthday { get; set; }
         public string L_password { get; set; }
         public string L_accessRight { get; set; }
         public Nullable<System.DateTime> L_registerDatetime { get; set; }
-        public bool L_isBan { get; set; }
+        public Nullable<bool> L_isBan { get; set; }
     }
 }
