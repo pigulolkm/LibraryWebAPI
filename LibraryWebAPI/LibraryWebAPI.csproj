@@ -279,6 +279,7 @@
       <DependentUpon>LibraryModel.edmx</DependentUpon>
       <LastGenOutput>LibraryModel.cs</LastGenOutput>
     </Content>
+    <None Include="Properties\PublishProfiles\Library.pubxml" />
     <None Include="Properties\PublishProfiles\LibraryWebAPI.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />

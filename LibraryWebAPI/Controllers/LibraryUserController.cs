@@ -66,6 +66,11 @@ namespace LibraryWebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                
+                libraryuser.L_registerDatetime = DateTime.Now;
+                libraryuser.L_isBan = false;
+                libraryuser.L_accessRight = "100";
+
                 db.LibraryUsers.Add(libraryuser);
                 db.SaveChanges();
 
