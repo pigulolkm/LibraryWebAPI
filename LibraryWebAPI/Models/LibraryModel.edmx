@@ -19,7 +19,7 @@
           <Property Name="B_title" Type="nvarchar(max)" />
           <Property Name="B_ISBN" Type="nvarchar(max)" />
           <Property Name="B_publisher" Type="nvarchar(max)" />
-          <Property Name="B_publicationDate" Type="datetime" />
+          <Property Name="B_publicationDate" Type="nvarchar(max)" />
           <Property Name="B_subject" Type="nvarchar(max)" />
           <Property Name="B_language" Type="nvarchar(max)" />
           <Property Name="B_datetime" Type="datetime" />
@@ -71,7 +71,7 @@
           <Property Name="B_title" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_ISBN" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_publisher" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_publicationDate" Type="DateTime" Precision="3" />
+          <Property Name="B_publicationDate" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_subject" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_language" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_datetime" Type="DateTime" Precision="3" />
