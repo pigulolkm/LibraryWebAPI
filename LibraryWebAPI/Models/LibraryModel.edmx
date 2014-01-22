@@ -23,6 +23,7 @@
           <Property Name="B_subject" Type="nvarchar(max)" />
           <Property Name="B_language" Type="nvarchar(max)" />
           <Property Name="B_datetime" Type="datetime" />
+          <Property Name="B_status" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Borrowing_record">
           <Key>
@@ -75,6 +76,7 @@
           <Property Name="B_subject" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_language" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_datetime" Type="DateTime" Precision="3" />
+          <Property Name="B_status" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
         <EntityType Name="Borrowing_record">
           <Key>
@@ -122,6 +124,7 @@
                 <ScalarProperty Name="B_subject" ColumnName="B_subject" />
                 <ScalarProperty Name="B_language" ColumnName="B_language" />
                 <ScalarProperty Name="B_datetime" ColumnName="B_datetime" />
+                <ScalarProperty Name="B_status" ColumnName="B_status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
