@@ -25,5 +25,7 @@ namespace LibraryWebAPI.Models
         public string L_accessRight { get; set; }
         public Nullable<System.DateTime> L_registerDatetime { get; set; }
         public Nullable<bool> L_isBan { get; set; }
+        public Nullable<System.DateTime> L_lastLoginTime { get; set; }
+        public string L_token { get; set; }
     }
 }

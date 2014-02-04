@@ -6,10 +6,22 @@
     <edmx:StorageModels>
       <Schema Namespace="LibraryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="LibraryModelStoreContainer">
+          <EntitySet Name="Admin" EntityType="LibraryModel.Store.Admin" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Store.Borrowing_record" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="LibraryUser" EntityType="LibraryModel.Store.LibraryUser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Reservation" EntityType="LibraryModel.Store.Reservation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Rule" EntityType="LibraryModel.Store.Rule" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="Admin_id" />
+          </Key>
+          <Property Name="Admin_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Admin_password" Type="nvarchar(max)" />
+          <Property Name="Admin_token" Type="nvarchar(max)" />
+          <Property Name="Admin_lastLoginTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="Book">
           <Key>
             <PropertyRef Name="B_id" />
@@ -22,6 +34,7 @@
           <Property Name="B_publicationDate" Type="nvarchar(max)" />
           <Property Name="B_subject" Type="nvarchar(max)" />
           <Property Name="B_language" Type="nvarchar(max)" />
+          <Property Name="B_imagePath" Type="nvarchar(max)" />
           <Property Name="B_datetime" Type="datetime" />
           <Property Name="B_status" Type="nvarchar(max)" />
         </EntityType>
@@ -52,6 +65,30 @@
           <Property Name="L_accessRight" Type="nvarchar(max)" />
           <Property Name="L_registerDatetime" Type="datetime" />
           <Property Name="L_isBan" Type="bit" />
+          <Property Name="L_lastLoginTime" Type="datetime" />
+          <Property Name="L_token" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="R_id" />
+          </Key>
+          <Property Name="R_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="B_id" Type="int" />
+          <Property Name="L_id" Type="int" />
+          <Property Name="R_datetime" Type="datetime" />
+          <Property Name="R_isActivated" Type="bit" />
+          <Property Name="R_finishDatetime" Type="datetime" />
+          <Property Name="R_getBookDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Rule">
+          <Key>
+            <PropertyRef Name="Rule_id" />
+          </Key>
+          <Property Name="Rule_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Rule_borrowingLimit" Type="int" Nullable="false" />
+          <Property Name="Rule_renewalLimit" Type="int" Nullable="false" />
+          <Property Name="Rule_borrowingPeriod" Type="int" Nullable="false" />
+          <Property Name="Rue_reservationLimit" Type="int" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:StorageModels>
@@ -59,10 +96,22 @@
     <edmx:ConceptualModels>
       <Schema Namespace="LibraryModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="LibraryEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Admins" EntityType="LibraryModel.Admin" />
           <EntitySet Name="Books" EntityType="LibraryModel.Book" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Borrowing_record" />
           <EntitySet Name="LibraryUsers" EntityType="LibraryModel.LibraryUser" />
+          <EntitySet Name="Reservations" EntityType="LibraryModel.Reservation" />
+          <EntitySet Name="Rules" EntityType="LibraryModel.Rule" />
         </EntityContainer>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="Admin_id" />
+          </Key>
+          <Property Name="Admin_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Admin_password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Admin_token" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Admin_lastLoginTime" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="Book">
           <Key>
             <PropertyRef Name="B_id" />
@@ -75,6 +124,7 @@
           <Property Name="B_publicationDate" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_subject" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_language" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_imagePath" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_datetime" Type="DateTime" Precision="3" />
           <Property Name="B_status" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
@@ -105,6 +155,30 @@
           <Property Name="L_accessRight" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_registerDatetime" Type="DateTime" Precision="3" />
           <Property Name="L_isBan" Type="Boolean" />
+          <Property Name="L_lastLoginTime" Type="DateTime" Precision="3" />
+          <Property Name="L_token" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="R_id" />
+          </Key>
+          <Property Name="R_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="B_id" Type="Int32" />
+          <Property Name="L_id" Type="Int32" />
+          <Property Name="R_datetime" Type="DateTime" Precision="3" />
+          <Property Name="R_isActivated" Type="Boolean" />
+          <Property Name="R_finishDatetime" Type="DateTime" Precision="3" />
+          <Property Name="R_getBookDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Rule">
+          <Key>
+            <PropertyRef Name="Rule_id" />
+          </Key>
+          <Property Name="Rule_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Rule_borrowingLimit" Type="Int32" Nullable="false" />
+          <Property Name="Rule_renewalLimit" Type="Int32" Nullable="false" />
+          <Property Name="Rule_borrowingPeriod" Type="Int32" Nullable="false" />
+          <Property Name="Rue_reservationLimit" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -112,6 +186,16 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="LibraryModelStoreContainer" CdmEntityContainer="LibraryEntities">
+          <EntitySetMapping Name="Admins">
+            <EntityTypeMapping TypeName="LibraryModel.Admin">
+              <MappingFragment StoreEntitySet="Admin">
+                <ScalarProperty Name="Admin_id" ColumnName="Admin_id" />
+                <ScalarProperty Name="Admin_password" ColumnName="Admin_password" />
+                <ScalarProperty Name="Admin_token" ColumnName="Admin_token" />
+                <ScalarProperty Name="Admin_lastLoginTime" ColumnName="Admin_lastLoginTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Books">
             <EntityTypeMapping TypeName="LibraryModel.Book">
               <MappingFragment StoreEntitySet="Book">
@@ -123,6 +207,7 @@
                 <ScalarProperty Name="B_publicationDate" ColumnName="B_publicationDate" />
                 <ScalarProperty Name="B_subject" ColumnName="B_subject" />
                 <ScalarProperty Name="B_language" ColumnName="B_language" />
+                <ScalarProperty Name="B_imagePath" ColumnName="B_imagePath" />
                 <ScalarProperty Name="B_datetime" ColumnName="B_datetime" />
                 <ScalarProperty Name="B_status" ColumnName="B_status" />
               </MappingFragment>
@@ -155,6 +240,32 @@
                 <ScalarProperty Name="L_accessRight" ColumnName="L_accessRight" />
                 <ScalarProperty Name="L_registerDatetime" ColumnName="L_registerDatetime" />
                 <ScalarProperty Name="L_isBan" ColumnName="L_isBan" />
+                <ScalarProperty Name="L_lastLoginTime" ColumnName="L_lastLoginTime" />
+                <ScalarProperty Name="L_token" ColumnName="L_token" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservations">
+            <EntityTypeMapping TypeName="LibraryModel.Reservation">
+              <MappingFragment StoreEntitySet="Reservation">
+                <ScalarProperty Name="R_id" ColumnName="R_id" />
+                <ScalarProperty Name="B_id" ColumnName="B_id" />
+                <ScalarProperty Name="L_id" ColumnName="L_id" />
+                <ScalarProperty Name="R_datetime" ColumnName="R_datetime" />
+                <ScalarProperty Name="R_isActivated" ColumnName="R_isActivated" />
+                <ScalarProperty Name="R_finishDatetime" ColumnName="R_finishDatetime" />
+                <ScalarProperty Name="R_getBookDate" ColumnName="R_getBookDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rules">
+            <EntityTypeMapping TypeName="LibraryModel.Rule">
+              <MappingFragment StoreEntitySet="Rule">
+                <ScalarProperty Name="Rule_id" ColumnName="Rule_id" />
+                <ScalarProperty Name="Rule_borrowingLimit" ColumnName="Rule_borrowingLimit" />
+                <ScalarProperty Name="Rule_renewalLimit" ColumnName="Rule_renewalLimit" />
+                <ScalarProperty Name="Rule_borrowingPeriod" ColumnName="Rule_borrowingPeriod" />
+                <ScalarProperty Name="Rue_reservationLimit" ColumnName="Rue_reservationLimit" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

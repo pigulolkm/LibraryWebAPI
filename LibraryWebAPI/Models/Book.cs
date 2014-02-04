@@ -22,6 +22,7 @@ namespace LibraryWebAPI.Models
         public string B_publicationDate { get; set; }
         public string B_subject { get; set; }
         public string B_language { get; set; }
+        public string B_imagePath { get; set; }
         public Nullable<System.DateTime> B_datetime { get; set; }
         public string B_status { get; set; }
     }
