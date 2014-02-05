@@ -79,7 +79,7 @@ namespace LibraryWebAPI.Controllers
                     result = new Object[] { new { result = HttpStatusCode.NotFound.ToString() } };
                 }
                 // 4.
-                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName } };
+                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName, LID = libraryuser.L_id } };
             }
             return result;
         }
