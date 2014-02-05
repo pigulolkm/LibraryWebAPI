@@ -50,18 +50,11 @@ namespace LibraryWebAPI.Controllers
                                     break;
                 case "ISBN":        books = from b in db.Books where b.B_ISBN.Contains(searchKey) select b;
                                     break;
-                case "Scan Code":   books = from b in db.Books where b.B_ISBN.Contains(searchKey) select b;
+                case "ScanCode":   books = from b in db.Books where b.B_ISBN.Contains(searchKey) select b;
                                     break;
             }
 
-            if (books == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
-            else
-            {
-                return books.AsEnumerable();
-            }
+            return books.AsEnumerable();
         }
 
         // PUT api/Book/5
