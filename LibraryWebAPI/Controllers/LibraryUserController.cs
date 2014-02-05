@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using LibraryWebAPI.Models;
+using System.Web.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace LibraryWebAPI.Controllers
 {
@@ -32,6 +34,54 @@ namespace LibraryWebAPI.Controllers
             }
 
             return libraryuser;
+        }
+
+        // PUT api/LibraryUser/PutSignInLibraryUser
+        [HttpPut]
+        public Array SignInLibraryUser([FromBody] JObject json)
+        {
+            object[] result = new Object[]{new { result = "False" }};
+            string password = json["pw"].ToString();
+            string email = json["email"].ToString();
+            // STEPS
+            // 1. compare password
+            // 2. create current time & token (hash(current time + email))
+            // 3. update L_lastLoginTime & L_token
+            // 4. return token to client
+
+            // 1.
+            var user = from l in db.LibraryUsers
+                       where l.L_email.Equals(email) && l.L_password.Equals(password) 
+                       select l;
+
+            // user is not null & password is correct
+            if (user.Any())
+            {
+                LibraryUser libraryuser = user.SingleOrDefault();
+                // 2.
+                DateTime currentTime = DateTime.Now;
+                string currentTimeMillis = currentTime.Millisecond.ToString();
+                string token = Crypto.Hash(currentTimeMillis + email);
+
+                // 3.
+                libraryuser.L_lastLoginTime = currentTime;
+                libraryuser.L_token = token;
+
+                db.Entry(libraryuser).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    // return "result": "NotFound"
+                    result = new Object[] { new { result = HttpStatusCode.NotFound.ToString() } };
+                }
+                // 4.
+                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName } };
+            }
+            return result;
         }
 
         // PUT api/LibraryUser/5
