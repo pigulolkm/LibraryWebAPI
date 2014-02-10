@@ -17,13 +17,13 @@ namespace LibraryWebAPI.Controllers
         private LibraryEntities db = new LibraryEntities();
 
         // GET api/BorrowingRecord
-        public IEnumerable<Borrowing_record> GetBorrowing_record()
+        public IEnumerable<Borrowing_record> GetBorrowingRecord()
         {
             return db.Borrowing_record.AsEnumerable();
         }
 
         // GET api/BorrowingRecord/5
-        public Borrowing_record GetBorrowing_record(int id)
+        public Borrowing_record GetBorrowingRecord(int id)
         {
             Borrowing_record borrowing_record = db.Borrowing_record.Find(id);
             if (borrowing_record == null)
@@ -35,7 +35,7 @@ namespace LibraryWebAPI.Controllers
         }
 
         // PUT api/BorrowingRecord/5
-        public HttpResponseMessage PutBorrowing_record(int id, Borrowing_record borrowing_record)
+        public HttpResponseMessage PutBorrowingRecord(int id, Borrowing_record borrowing_record)
         {
             if (!ModelState.IsValid)
             {
@@ -62,15 +62,22 @@ namespace LibraryWebAPI.Controllers
         }
 
         // POST api/BorrowingRecord
-        public HttpResponseMessage PostBorrowing_record(Borrowing_record borrowing_record)
+        public HttpResponseMessage PostBorrowingRecord(Borrowing_record[] borrowing_record)
         {
+            // TO-DO Get rule borrowing period
             if (ModelState.IsValid)
             {
-                db.Borrowing_record.Add(borrowing_record);
-                db.SaveChanges();
+                foreach (Borrowing_record br in borrowing_record)
+                {
+                    br.BR_datetime = DateTime.Now;
+                    br.BR_renewalTimes = 0;
+                  //  br.BR_shouldReturnedDate = DateTime.Now.AddDay(;
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, borrowing_record);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = borrowing_record.BR_id }));
+                    db.Borrowing_record.Add(br);
+                }
+                db.SaveChanges();
+                
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
                 return response;
             }
             else
@@ -80,7 +87,7 @@ namespace LibraryWebAPI.Controllers
         }
 
         // DELETE api/BorrowingRecord/5
-        public HttpResponseMessage DeleteBorrowing_record(int id)
+        public HttpResponseMessage DeleteBorrowingRecord(int id)
         {
             Borrowing_record borrowing_record = db.Borrowing_record.Find(id);
             if (borrowing_record == null)
