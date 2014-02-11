@@ -36,6 +36,12 @@ namespace LibraryWebAPI.Controllers
             return libraryuser;
         }
 
+        public String GetValidateToken(String token, String email)
+        {
+            bool valid = db.LibraryUsers.Where(lb => lb.L_token.Equals(token) && lb.L_email.Equals(email)).Any();
+            return valid.ToString();
+        }
+
         // PUT api/LibraryUser/PutSignInLibraryUser
         [HttpPut]
         public Array SignInLibraryUser([FromBody] JObject json)
