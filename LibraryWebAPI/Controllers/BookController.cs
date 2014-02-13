@@ -48,9 +48,9 @@ namespace LibraryWebAPI.Controllers
                                     break;
                 case "Publisher":   books = from b in db.Books where b.B_publisher.Contains(searchKey) select b;
                                     break;
-                case "ISBN":        books = from b in db.Books where b.B_ISBN.Contains(searchKey) select b;
+                case "ISBN":        books = from b in db.Books where b.B_ISBN.Equals(searchKey) select b;
                                     break;
-                case "ScanCode":   books = from b in db.Books where b.B_ISBN.Contains(searchKey) select b;
+                case "ScanCode":   books = from b in db.Books where b.B_ISBN.Equals(searchKey) select b;
                                     break;
             }
 

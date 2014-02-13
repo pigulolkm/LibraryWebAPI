@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using LibraryWebAPI.Models;
+using System.Collections;
+using Newtonsoft.Json;
 
 namespace LibraryWebAPI.Controllers
 {
@@ -63,21 +65,54 @@ namespace LibraryWebAPI.Controllers
 
         // POST api/BorrowingRecord
         public HttpResponseMessage PostBorrowingRecord(Borrowing_record[] borrowing_record)
+        //public Object PostBorrowingRecord(Borrowing_record[] borrowing_record)
         {
-            // TO-DO Get rule borrowing period
+            object result = new object { };
             if (ModelState.IsValid)
             {
+                int days = db.Rules.Select(r => r.Rule_borrowingPeriod).Single();
+                List<object> success = new List<object>();
+                List<object> fail = new List<object>();
+                
+                
                 foreach (Borrowing_record br in borrowing_record)
                 {
-                    br.BR_datetime = DateTime.Now;
-                    br.BR_renewalTimes = 0;
-                  //  br.BR_shouldReturnedDate = DateTime.Now.AddDay(;
+                    var bookItem = db.Books.Where(b => b.B_id == br.B_id & b.B_status.Equals("Y"));
+                    bool availalbe = bookItem.Any();
+                    if (availalbe)
+                    {
+                        // Create borrowing record
+                        br.BR_datetime = DateTime.Now;
+                        br.BR_renewalTimes = 0;
+                        br.BR_shouldReturnedDate = DateTime.Now.AddDays(days);
 
-                    db.Borrowing_record.Add(br);
+                        // Update book status
+                        Book book = bookItem.Single();
+                        book.B_status = "N";
+
+                        db.Borrowing_record.Add(br);
+                        
+                        success.Add(book);
+                    }
+                    else
+                    {
+                        Book book = db.Books.Where(b => b.B_id == br.B_id).Single();
+                        fail.Add(book);
+                    }
                 }
-                db.SaveChanges();
-                
+
+                try
+                {
+                    db.SaveChanges();
+
+                    result = new {  Success = success.ToArray() , Fail = fail.ToArray() };
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+                response.Content = new StringContent(JsonConvert.SerializeObject(result));
                 return response;
             }
             else

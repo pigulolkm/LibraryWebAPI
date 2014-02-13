@@ -35,11 +35,28 @@ namespace LibraryWebAPI.Controllers
 
             return libraryuser;
         }
-
-        public String GetValidateToken(String token, String email)
+        // GET api/LibraryUser/GetValidateToken
+        // Return Array [{ token : True/False, borrowedAmount : {No.}, borrowingLimit : {No.} }]
+        public Array GetValidateToken(String token, String email, String Lid)
         {
-            bool valid = db.LibraryUsers.Where(lb => lb.L_token.Equals(token) && lb.L_email.Equals(email)).Any();
-            return valid.ToString();
+            object[] result = new object[] { new { result = "False" } };
+            int LID = int.Parse(Lid);
+
+            try
+            {
+                bool valid = db.LibraryUsers.Where(lb => lb.L_token.Equals(token) && lb.L_email.Equals(email) && lb.L_id == LID).Any();
+
+                if (valid)
+                {
+                    int bAmount = db.Borrowing_record.Where(br => br.L_id == LID && br.BR_returnedDate.Equals(null)).Count();
+                    int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
+
+                    result = new object[] { new { result = "True", borrowedAmount = bAmount, borrowingLimit = bLimit } };
+                }
+
+            }
+            catch (Exception e) { }
+            return result;
         }
 
         // PUT api/LibraryUser/PutSignInLibraryUser
