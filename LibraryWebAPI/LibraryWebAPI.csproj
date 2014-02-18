@@ -175,6 +175,7 @@
     <Compile Include="Models\Book.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BorrowBooks.cs" />
     <Compile Include="Models\Borrowing_record.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>

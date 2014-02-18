@@ -77,8 +77,8 @@ namespace LibraryWebAPI.Controllers
                 
                 foreach (Borrowing_record br in borrowing_record)
                 {
-                    var bookItem = db.Books.Where(b => b.B_id == br.B_id & b.B_status.Equals("Y"));
-                    bool availalbe = bookItem.Any();
+                    var bookItem = db.Books.Where(b => b.B_id == br.B_id);
+                    bool availalbe = bookItem.Where(b => b.B_status.Equals("Y")).Any();
                     if (availalbe)
                     {
                         // Create borrowing record
@@ -90,13 +90,23 @@ namespace LibraryWebAPI.Controllers
                         Book book = bookItem.Single();
                         book.B_status = "N";
 
+                        // Create BorrowBook item for displaying
+                        BorrowBooks b = new BorrowBooks()
+                        {
+                            author = book.B_author,
+                            title = book.B_title,
+                            publisher = book.B_publisher,
+                            publicationDate = book.B_publicationDate,
+                            shouldReturnedDate = br.BR_shouldReturnedDate
+                        };
+
                         db.Borrowing_record.Add(br);
                         
-                        success.Add(book);
+                        success.Add(b);
                     }
                     else
                     {
-                        Book book = db.Books.Where(b => b.B_id == br.B_id).Single();
+                        Book book = bookItem.Single();
                         fail.Add(book);
                     }
                 }
