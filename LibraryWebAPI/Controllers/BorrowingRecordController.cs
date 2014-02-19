@@ -24,13 +24,27 @@ namespace LibraryWebAPI.Controllers
             return db.Borrowing_record.AsEnumerable();
         }
 
-        // GET api/BorrowingRecord/5
-        public Borrowing_record GetBorrowingRecord(int id)
+        // GET api/BorrowingRecord/{id}?token={token}
+        public IEnumerable<Borrowing_record> GetBorrowingRecord(int id, String token)
         {
-            Borrowing_record borrowing_record = db.Borrowing_record.Find(id);
-            if (borrowing_record == null)
+            bool valid = db.LibraryUsers.Where(lb => lb.L_id == id && lb.L_token.Equals(token)).Any();
+            IEnumerable<Borrowing_record> borrowing_record = null;
+            if (valid)
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                var notReturnedRecords = from nbr in db.Borrowing_record
+                                         where nbr.L_id == id && nbr.BR_returnedDate == null
+                                         select nbr;
+
+                var returnRecords = from br in db.Borrowing_record
+                                    where br.L_id == id && br.BR_returnedDate.HasValue
+                                    orderby br.BR_returnedDate descending
+                                    select br;
+
+                borrowing_record = notReturnedRecords.AsEnumerable().Concat(returnRecords.AsEnumerable());
+                if (borrowing_record == null)
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+                }
             }
 
             return borrowing_record;
