@@ -25,29 +25,55 @@ namespace LibraryWebAPI.Controllers
         }
 
         // GET api/BorrowingRecord/{id}?token={token}
-        public IEnumerable<Borrowing_record> GetBorrowingRecord(int id, String token)
+        public HttpResponseMessage GetBorrowingRecord(int id, String token)
         {
             bool valid = db.LibraryUsers.Where(lb => lb.L_id == id && lb.L_token.Equals(token)).Any();
-            IEnumerable<Borrowing_record> borrowing_record = null;
+            object result = new object { };
+
             if (valid)
             {
                 var notReturnedRecords = from nbr in db.Borrowing_record
+                                         join bk in db.Books on nbr.B_id equals bk.B_id
                                          where nbr.L_id == id && nbr.BR_returnedDate == null
-                                         select nbr;
+                                         select new { 
+                                             Bid = bk.B_id, 
+                                             Title = bk.B_title, 
+                                             Author = bk.B_author, 
+                                             Publisher = bk.B_publisher,
+                                             ReturnedDate = nbr.BR_returnedDate, 
+                                             ShouldReturnedDate = nbr.BR_shouldReturnedDate 
+                                         };
+
+                
 
                 var returnRecords = from br in db.Borrowing_record
+                                    join bk in db.Books on br.B_id equals bk.B_id
                                     where br.L_id == id && br.BR_returnedDate.HasValue
                                     orderby br.BR_returnedDate descending
-                                    select br;
+                                    select new
+                                    {
+                                        Bid = bk.B_id,
+                                        Title = bk.B_title,
+                                        Author = bk.B_author,
+                                        Publisher = bk.B_publisher,
+                                        ReturnedDate = br.BR_returnedDate,
+                                        ShouldReturnedDate = br.BR_shouldReturnedDate
+                                    };
 
-                borrowing_record = notReturnedRecords.AsEnumerable().Concat(returnRecords.AsEnumerable());
-                if (borrowing_record == null)
+                result = new { BorrowingRecord = notReturnedRecords.ToArray().Concat(returnRecords.ToArray()),
+                               BorrowedAmount = returnRecords.Count(),
+                               NonReturnedAmount = notReturnedRecords.Count()
+                             };
+
+
+                if (result == null)
                 {
                     throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
                 }
             }
-
-            return borrowing_record;
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(result));
+            return response;
         }
 
         // PUT api/BorrowingRecord/5
