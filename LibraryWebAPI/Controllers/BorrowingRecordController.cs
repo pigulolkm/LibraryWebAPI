@@ -61,7 +61,7 @@ namespace LibraryWebAPI.Controllers
                                     };
 
                 result = new { BorrowingRecord = notReturnedRecords.ToArray().Concat(returnRecords.ToArray()),
-                               BorrowedAmount = returnRecords.Count(),
+                               BorrowedAmount = returnRecords.Count() + notReturnedRecords.Count(),
                                NonReturnedAmount = notReturnedRecords.Count()
                              };
 
@@ -77,33 +77,39 @@ namespace LibraryWebAPI.Controllers
         }
 
         // PUT api/BorrowingRecord/5
-        public HttpResponseMessage PutBorrowingRecord(int id, Borrowing_record borrowing_record)
+        //public HttpResponseMessage PutBorrowingRecord(int id, Borrowing_record borrowing_record)
+        public HttpResponseMessage PutBorrowingRecord(Borrowing_record[] borrowing_record)
         {
-            if (!ModelState.IsValid)
+            object result = new object { };
+            if (ModelState.IsValid)
+            {
+                foreach (Borrowing_record br in borrowing_record)
+                {
+
+                }
+
+                try
+                {
+                    db.SaveChanges();
+
+                    // result = new {};
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                //response.Content = new StringContent(JsonConvert.SerializeObject(result));
+                return response;
+            }
+            else
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-
-            if (id != borrowing_record.BR_id)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-            db.Entry(borrowing_record).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK);
+            }  
         }
 
         // POST api/BorrowingRecord
+        // Borrow Books
         public HttpResponseMessage PostBorrowingRecord(Borrowing_record[] borrowing_record)
         //public Object PostBorrowingRecord(Borrowing_record[] borrowing_record)
         {
