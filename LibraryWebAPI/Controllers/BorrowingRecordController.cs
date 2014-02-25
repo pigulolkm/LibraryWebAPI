@@ -47,7 +47,8 @@ namespace LibraryWebAPI.Controllers
                 
 
                 var returnRecords = from br in db.Borrowing_record
-                                    join bk in db.Books on br.B_id equals bk.B_id
+                                    join bk in db.Books 
+                                    on br.B_id equals bk.B_id
                                     where br.L_id == id && br.BR_returnedDate.HasValue
                                     orderby br.BR_returnedDate descending
                                     select new
@@ -78,7 +79,6 @@ namespace LibraryWebAPI.Controllers
 
         // PUT api/BorrowingRecord/5
         // br -> { BR_id , B_id, L_id }
-        //public HttpResponseMessage PutBorrowingRecord(int id, Borrowing_record borrowing_record)
         public HttpResponseMessage PutBorrowingRecord(int id)
         {
             object result = new object { };
@@ -88,13 +88,15 @@ namespace LibraryWebAPI.Controllers
 
             if (ModelState.IsValid)
             {
-                var bookItem = db.Books.Where(b => b.B_id == id && b.B_status.Equals("N"));
+                var bookItem = db.Books.Where(b => b.B_id == id);
                 Boolean bookExist = bookItem.Any();
 
                 if (bookExist)
                 {
+                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals("N")).Any();
                     Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
-                    if(B_record != null)
+
+                    if (B_record != null && BookIsBorrowed)
                     {
                         // Out of Date
                         if (B_record.BR_shouldReturnedDate.Date < now.Date)
@@ -118,7 +120,6 @@ namespace LibraryWebAPI.Controllers
                             title = book.B_title,
                             publisher = book.B_publisher,
                             publicationDate = book.B_publicationDate,
-                            returnedDate = now,
                             fine = fine
                         };
 
@@ -131,7 +132,7 @@ namespace LibraryWebAPI.Controllers
                 }
                 else
                 {
-                    result = new { Result = "False", Message = "The book id is invalid." };
+                    result = new { Result = "False", Message = "The book ID is invalid." };
                 }
 
                 try
