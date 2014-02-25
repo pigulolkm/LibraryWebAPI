@@ -4,20 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibraryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="LibraryModelStoreContainer">
-          <EntitySet Name="Admin" EntityType="LibraryModel.Store.Admin" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Store.Borrowing_record" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="LibraryUser" EntityType="LibraryModel.Store.LibraryUser" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Reservation" EntityType="LibraryModel.Store.Reservation" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Rule" EntityType="LibraryModel.Store.Rule" store:Type="Tables" Schema="dbo" />
-        </EntityContainer>
+      <Schema Namespace="LibraryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="Admin_id" />
           </Key>
-          <Property Name="Admin_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Admin_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Admin_password" Type="nvarchar(max)" />
           <Property Name="Admin_token" Type="nvarchar(max)" />
           <Property Name="Admin_lastLoginTime" Type="datetime" />
@@ -26,7 +18,7 @@
           <Key>
             <PropertyRef Name="B_id" />
           </Key>
-          <Property Name="B_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="B_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="B_author" Type="nvarchar(max)" />
           <Property Name="B_title" Type="nvarchar(max)" />
           <Property Name="B_ISBN" Type="nvarchar(max)" />
@@ -42,7 +34,7 @@
           <Key>
             <PropertyRef Name="BR_id" />
           </Key>
-          <Property Name="BR_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BR_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="B_id" Type="int" />
           <Property Name="L_id" Type="int" />
           <Property Name="BR_datetime" Type="datetime" />
@@ -54,7 +46,7 @@
           <Key>
             <PropertyRef Name="L_id" />
           </Key>
-          <Property Name="L_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="L_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="L_firstName" Type="nvarchar(max)" />
           <Property Name="L_lastName" Type="nvarchar(max)" />
           <Property Name="L_phoneNo" Type="nvarchar(max)" />
@@ -72,7 +64,7 @@
           <Key>
             <PropertyRef Name="R_id" />
           </Key>
-          <Property Name="R_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="R_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="B_id" Type="int" />
           <Property Name="L_id" Type="int" />
           <Property Name="R_datetime" Type="datetime" />
@@ -84,55 +76,56 @@
           <Key>
             <PropertyRef Name="Rule_id" />
           </Key>
-          <Property Name="Rule_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Rule_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Rule_borrowingLimit" Type="int" Nullable="false" />
           <Property Name="Rule_renewalLimit" Type="int" Nullable="false" />
           <Property Name="Rule_borrowingPeriod" Type="int" Nullable="false" />
-          <Property Name="Rue_reservationLimit" Type="int" Nullable="false" />
+          <Property Name="Rule_reservationLimit" Type="int" Nullable="false" />
+          <Property Name="Rule_outDateFine" Type="float" Nullable="false" />
         </EntityType>
+        <EntityContainer Name="LibraryModelStoreContainer">
+          <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Borrowing_record" EntityType="Self.Borrowing_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryUser" EntityType="Self.LibraryUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reservation" EntityType="Self.Reservation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rule" EntityType="Self.Rule" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="LibraryModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="LibraryEntities" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="Admins" EntityType="LibraryModel.Admin" />
-          <EntitySet Name="Books" EntityType="LibraryModel.Book" />
-          <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Borrowing_record" />
-          <EntitySet Name="LibraryUsers" EntityType="LibraryModel.LibraryUser" />
-          <EntitySet Name="Reservations" EntityType="LibraryModel.Reservation" />
-          <EntitySet Name="Rules" EntityType="LibraryModel.Rule" />
-        </EntityContainer>
+      <Schema Namespace="LibraryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="Admin_id" />
           </Key>
-          <Property Name="Admin_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Admin_password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Admin_token" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Admin_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Admin_password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Admin_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Admin_lastLoginTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Book">
           <Key>
             <PropertyRef Name="B_id" />
           </Key>
-          <Property Name="B_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="B_author" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_title" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_ISBN" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_publisher" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_publicationDate" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_subject" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_language" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="B_imagePath" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="B_author" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_ISBN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_publisher" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_publicationDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_language" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="B_imagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="B_datetime" Type="DateTime" Precision="3" />
-          <Property Name="B_status" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="B_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Borrowing_record">
           <Key>
             <PropertyRef Name="BR_id" />
           </Key>
-          <Property Name="BR_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="BR_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="B_id" Type="Int32" />
           <Property Name="L_id" Type="Int32" />
           <Property Name="BR_datetime" Type="DateTime" Precision="3" />
@@ -144,25 +137,25 @@
           <Key>
             <PropertyRef Name="L_id" />
           </Key>
-          <Property Name="L_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="L_firstName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_lastName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_phoneNo" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_IDNO" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="L_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="L_firstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="L_lastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="L_phoneNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="L_email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="L_IDNO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="L_birthday" Type="DateTime" Precision="3" />
-          <Property Name="L_password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="L_accessRight" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="L_password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="L_accessRight" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="L_registerDatetime" Type="DateTime" Precision="3" />
           <Property Name="L_isBan" Type="Boolean" />
           <Property Name="L_lastLoginTime" Type="DateTime" Precision="3" />
-          <Property Name="L_token" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="L_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
             <PropertyRef Name="R_id" />
           </Key>
-          <Property Name="R_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="R_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="B_id" Type="Int32" />
           <Property Name="L_id" Type="Int32" />
           <Property Name="R_datetime" Type="DateTime" Precision="3" />
@@ -174,12 +167,21 @@
           <Key>
             <PropertyRef Name="Rule_id" />
           </Key>
-          <Property Name="Rule_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Rule_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Rule_borrowingLimit" Type="Int32" Nullable="false" />
           <Property Name="Rule_renewalLimit" Type="Int32" Nullable="false" />
           <Property Name="Rule_borrowingPeriod" Type="Int32" Nullable="false" />
-          <Property Name="Rue_reservationLimit" Type="Int32" Nullable="false" />
+          <Property Name="Rule_reservationLimit" Type="Int32" Nullable="false" />
+          <Property Name="Rule_outDateFine" Type="Double" Nullable="false" />
         </EntityType>
+        <EntityContainer Name="LibraryEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admins" EntityType="Self.Admin" />
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Borrowing_record" EntityType="Self.Borrowing_record" />
+          <EntitySet Name="LibraryUsers" EntityType="Self.LibraryUser" />
+          <EntitySet Name="Reservations" EntityType="Self.Reservation" />
+          <EntitySet Name="Rules" EntityType="Self.Rule" />
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -265,7 +267,8 @@
                 <ScalarProperty Name="Rule_borrowingLimit" ColumnName="Rule_borrowingLimit" />
                 <ScalarProperty Name="Rule_renewalLimit" ColumnName="Rule_renewalLimit" />
                 <ScalarProperty Name="Rule_borrowingPeriod" ColumnName="Rule_borrowingPeriod" />
-                <ScalarProperty Name="Rue_reservationLimit" ColumnName="Rue_reservationLimit" />
+                <ScalarProperty Name="Rule_reservationLimit" ColumnName="Rule_reservationLimit" />
+                <ScalarProperty Name="Rule_outDateFine" ColumnName="Rule_outDateFine" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -283,8 +286,9 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

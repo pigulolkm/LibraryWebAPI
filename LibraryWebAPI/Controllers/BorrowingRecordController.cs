@@ -77,29 +77,73 @@ namespace LibraryWebAPI.Controllers
         }
 
         // PUT api/BorrowingRecord/5
+        // br -> { BR_id , B_id, L_id }
         //public HttpResponseMessage PutBorrowingRecord(int id, Borrowing_record borrowing_record)
-        public HttpResponseMessage PutBorrowingRecord(Borrowing_record[] borrowing_record)
+        public HttpResponseMessage PutBorrowingRecord(int id)
         {
             object result = new object { };
+            DateTime now = DateTime.Now;
+            double fine = 0;
+            ReturnBooks returnBooks = new ReturnBooks();
+
             if (ModelState.IsValid)
             {
-                foreach (Borrowing_record br in borrowing_record)
-                {
+                var bookItem = db.Books.Where(b => b.B_id == id && b.B_status.Equals("N"));
+                Boolean bookExist = bookItem.Any();
 
+                if (bookExist)
+                {
+                    Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
+                    if(B_record != null)
+                    {
+                        // Out of Date
+                        if (B_record.BR_shouldReturnedDate.Date < now.Date)
+                        {
+                            // Calculate the fine
+                            TimeSpan outDateTime = now.Date.Subtract(B_record.BR_shouldReturnedDate.Date);
+                            fine = outDateTime.Days * db.Rules.Select(r => r.Rule_outDateFine).Single();
+                        }
+
+                        // Update the borrowing record
+                        B_record.BR_returnedDate = now;
+
+                        // Update Book Status for others to borrrow
+                        Book book = bookItem.Single();
+                        book.B_status = "Y";
+
+                        // Create ReturnBooks item for displaying
+                        returnBooks = new ReturnBooks()
+                        {
+                            author = book.B_author,
+                            title = book.B_title,
+                            publisher = book.B_publisher,
+                            publicationDate = book.B_publicationDate,
+                            returnedDate = now,
+                            fine = fine
+                        };
+
+                        result = new { Result = "True", ReturnBooks = returnBooks };
+                    }
+                    else
+                    {
+                        result = new { Result = "False", Message = "The book is already returned." };
+                    }
+                }
+                else
+                {
+                    result = new { Result = "False", Message = "The book id is invalid." };
                 }
 
                 try
                 {
                     db.SaveChanges();
-
-                    // result = new {};
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
                 }
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                //response.Content = new StringContent(JsonConvert.SerializeObject(result));
+                response.Content = new StringContent(JsonConvert.SerializeObject(result));
                 return response;
             }
             else

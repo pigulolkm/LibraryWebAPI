@@ -200,6 +200,7 @@
     <Compile Include="Models\Reservation.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ReturnBooks.cs" />
     <Compile Include="Models\Rule.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>

@@ -18,6 +18,7 @@ namespace LibraryWebAPI.Models
         public int Rule_borrowingLimit { get; set; }
         public int Rule_renewalLimit { get; set; }
         public int Rule_borrowingPeriod { get; set; }
-        public int Rue_reservationLimit { get; set; }
+        public int Rule_reservationLimit { get; set; }
+        public double Rule_outDateFine { get; set; }
     }
 }
