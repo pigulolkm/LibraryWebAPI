@@ -76,8 +76,9 @@ namespace LibraryWebAPI.Controllers
             response.Content = new StringContent(JsonConvert.SerializeObject(result));
             return response;
         }
-
+        
         // PUT api/BorrowingRecord/5
+        // Return Books
         // br -> { BR_id , B_id, L_id }
         public HttpResponseMessage PutBorrowingRecord(int id)
         {
@@ -124,6 +125,75 @@ namespace LibraryWebAPI.Controllers
                         };
 
                         result = new { Result = "True", ReturnBooks = returnBooks };
+                    }
+                    else
+                    {
+                        result = new { Result = "False", Message = "The book is already returned." };
+                    }
+                }
+                else
+                {
+                    result = new { Result = "False", Message = "The book ID is invalid." };
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(JsonConvert.SerializeObject(result));
+                return response;
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }  
+        }
+
+        // PUT api/PutReturnBooks/5
+        // Renew Books
+        /*
+         *  {
+         *      Result : True/False,
+         *      Message : / RenewBooks : renewBooks
+         *  }
+        */
+        public HttpResponseMessage PutBorrowingRecordRenewBooks(int id)
+        {
+            object result = new object { };
+
+            if (ModelState.IsValid)
+            {
+                // 1. Check Record is exist and valid (Returned or not)
+                var bookItem = db.Books.Where(b => b.B_id == id);
+                Boolean bookExist = bookItem.Any();
+
+                if (bookExist)
+                {
+                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals("N")).Any();
+                    Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
+
+                    if (B_record != null && BookIsBorrowed)
+                    {
+                        // 2. Check renewal time limit of the record
+                        int renewalLimit = db.Rules.Select(r => r.Rule_renewalLimit).Single();
+                        if (B_record.BR_renewalTimes < renewalLimit)
+                        {
+                            // 3. Update the renewal time and should returned date
+                            B_record.BR_shouldReturnedDate = B_record.BR_shouldReturnedDate.AddDays(db.Rules.Select(r => r.Rule_borrowingPeriod).Single());
+                            B_record.BR_renewalTimes += 1;
+
+                            //4. Create result 
+                            result = new { Result = "True" };
+                        }
+                        else
+                        {
+                            result = new { Result = "False", Message = "The book has arrived the renewal limit." };
+                        }
                     }
                     else
                     {
