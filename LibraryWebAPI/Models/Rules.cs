@@ -12,7 +12,7 @@ namespace LibraryWebAPI.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Rule
+    public partial class Rules
     {
         public int Rule_id { get; set; }
         public int Rule_borrowingLimit { get; set; }

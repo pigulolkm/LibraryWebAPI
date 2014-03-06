@@ -30,6 +30,6 @@ namespace LibraryWebAPI.Models
         public DbSet<Borrowing_record> Borrowing_record { get; set; }
         public DbSet<LibraryUser> LibraryUsers { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Rule> Rules { get; set; }
+        public DbSet<Rules> Rules { get; set; }
     }
 }
