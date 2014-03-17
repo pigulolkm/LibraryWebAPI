@@ -59,6 +59,30 @@ namespace LibraryWebAPI.Controllers
             return result;
         }
 
+        // GET api/LibraryUser/GetValidateCard
+        // Return Array [{ token : True/False, borrowedAmount : {No.}, borrowingLimit : {No.} }]
+        public Array GetValidateCard(String cardID)
+        {
+            object[] result = new object[] { new { result = "False" } };
+
+            try
+            {
+                //var libraryUser = db.LibraryUsers.Where(lb => lb.L_cardID.equal(cardID));
+                //bool valid = user.Any();
+                //if (valid)
+                //{
+                //    int bAmount = db.Borrowing_record.Where(br => br.L_id == LID && br.BR_returnedDate.Equals(null)).Count();
+                //    int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
+                //    String firstName = libraryUser.Select(lb => lb.L_firstName).Single();
+                //    String lastName = libraryUser.Select(lb => lb.L_lastName).Single();
+                //    result = new object[] { new { result = "True", borrowedAmount = bAmount, borrowingLimit = bLimit, name = firstName+" "+lastName } };
+                //}
+
+            }
+            catch (Exception e) { }
+            return result;
+        }
+
         // PUT api/LibraryUser/PutSignInLibraryUser
         [HttpPut]
         public Array SignInLibraryUser([FromBody] JObject json)
