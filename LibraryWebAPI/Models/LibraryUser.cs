@@ -15,6 +15,7 @@ namespace LibraryWebAPI.Models
     public partial class LibraryUser
     {
         public int L_id { get; set; }
+        public string L_cardID { get; set; }
         public string L_firstName { get; set; }
         public string L_lastName { get; set; }
         public string L_phoneNo { get; set; }

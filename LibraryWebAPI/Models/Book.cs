@@ -15,6 +15,7 @@ namespace LibraryWebAPI.Models
     public partial class Book
     {
         public int B_id { get; set; }
+        public string B_qrCode { get; set; }
         public string B_author { get; set; }
         public string B_title { get; set; }
         public string B_ISBN { get; set; }

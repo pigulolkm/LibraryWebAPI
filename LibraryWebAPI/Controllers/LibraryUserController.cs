@@ -44,12 +44,35 @@ namespace LibraryWebAPI.Controllers
 
             try
             {
-                bool valid = db.LibraryUsers.Where(lb => lb.L_token.Equals(token) && lb.L_email.Equals(email) && lb.L_id == LID).Any();
+                var libraryUser = db.LibraryUsers.Where(lb => lb.L_token.Equals(token) && lb.L_email.Equals(email) && lb.L_id == LID);
+                bool valid = libraryUser.Any();
 
                 if (valid)
                 {
                     int bAmount = db.Borrowing_record.Where(br => br.L_id == LID && br.BR_returnedDate.Equals(null)).Count();
                     int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
+
+                    // Update libraryUser last login time and token --- Start
+                    LibraryUser libraryuser = libraryUser.SingleOrDefault();
+
+                    DateTime currentTime = DateTime.Now;
+                    string currentTimeMillis = currentTime.Millisecond.ToString();
+                    string hashedToken = Crypto.Hash(currentTimeMillis + libraryuser.L_email);
+
+                    libraryuser.L_lastLoginTime = currentTime;
+                    libraryuser.L_token = hashedToken;
+
+                    db.Entry(libraryuser).State = EntityState.Modified;
+                    // Update libraryUser last login time and token --- End
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        // return "result": "NotFound"
+                        result = new Object[] { new { result = HttpStatusCode.NotFound.ToString() } };
+                    }
 
                     result = new object[] { new { result = "True", borrowedAmount = bAmount, borrowingLimit = bLimit } };
                 }
@@ -60,23 +83,48 @@ namespace LibraryWebAPI.Controllers
         }
 
         // GET api/LibraryUser/GetValidateCard
-        // Return Array [{ token : True/False, borrowedAmount : {No.}, borrowingLimit : {No.} }]
+        // Return Array [{ token : True/False, borrowedAmount : {No.}, borrowingLimit : {No.}, name : firstName + " " + lastName, LID = LID }]
         public Array GetValidateCard(String cardID)
         {
             object[] result = new object[] { new { result = "False" } };
 
             try
             {
-                //var libraryUser = db.LibraryUsers.Where(lb => lb.L_cardID.equal(cardID));
-                //bool valid = user.Any();
-                //if (valid)
-                //{
-                //    int bAmount = db.Borrowing_record.Where(br => br.L_id == LID && br.BR_returnedDate.Equals(null)).Count();
-                //    int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
-                //    String firstName = libraryUser.Select(lb => lb.L_firstName).Single();
-                //    String lastName = libraryUser.Select(lb => lb.L_lastName).Single();
-                //    result = new object[] { new { result = "True", borrowedAmount = bAmount, borrowingLimit = bLimit, name = firstName+" "+lastName } };
-                //}
+                var libraryUser = db.LibraryUsers.Where(lb => lb.L_cardID.Equals(cardID));
+                bool valid = libraryUser.Any();
+                if (valid)
+                {
+                    LibraryUser libraryuser = libraryUser.SingleOrDefault();
+
+                    int bAmount = db.Borrowing_record.Where(br => br.L_id == libraryuser.L_id && br.BR_returnedDate.Equals(null)).Count();
+                    int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
+
+                    // Update libraryUser last login time and token --- Start
+
+                    DateTime currentTime = DateTime.Now;
+                    string currentTimeMillis = currentTime.Millisecond.ToString();
+                    string hashedToken = Crypto.Hash(currentTimeMillis + libraryuser.L_email);
+
+                    libraryuser.L_lastLoginTime = currentTime;
+                    libraryuser.L_token = hashedToken;
+
+                    db.Entry(libraryuser).State = EntityState.Modified;
+                    // Update libraryUser last login time and token --- End
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        // return "result": "NotFound"
+                        result = new Object[] { new { result = HttpStatusCode.NotFound.ToString() } };
+                    }
+
+                    String firstName = libraryUser.Select(lb => lb.L_firstName).Single();
+                    String lastName = libraryUser.Select(lb => lb.L_lastName).Single();
+
+                    result = new object[] { new { result = "True", borrowedAmount = bAmount, borrowingLimit = bLimit, name = firstName + " " + lastName, LID = libraryuser.L_id } };
+                }
 
             }
             catch (Exception e) { }

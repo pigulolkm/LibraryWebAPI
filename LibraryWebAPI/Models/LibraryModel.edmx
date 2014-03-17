@@ -27,6 +27,7 @@
             <PropertyRef Name="B_id" />
           </Key>
           <Property Name="B_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="B_qrCode" Type="nvarchar(max)" />
           <Property Name="B_author" Type="nvarchar(max)" />
           <Property Name="B_title" Type="nvarchar(max)" />
           <Property Name="B_ISBN" Type="nvarchar(max)" />
@@ -55,6 +56,7 @@
             <PropertyRef Name="L_id" />
           </Key>
           <Property Name="L_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="L_cardID" Type="nvarchar(max)" Nullable="false" />
           <Property Name="L_firstName" Type="nvarchar(max)" />
           <Property Name="L_lastName" Type="nvarchar(max)" />
           <Property Name="L_phoneNo" Type="nvarchar(max)" />
@@ -90,6 +92,7 @@
           <Property Name="Rule_borrowingPeriod" Type="int" Nullable="false" />
           <Property Name="Rule_reservationLimit" Type="int" Nullable="false" />
           <Property Name="Rule_outDateFine" Type="float" Nullable="false" />
+          <Property Name="Rule_limitRenewBookDay" Type="int" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:StorageModels>
@@ -118,6 +121,7 @@
             <PropertyRef Name="B_id" />
           </Key>
           <Property Name="B_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="B_qrCode" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_author" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_title" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="B_ISBN" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -146,6 +150,7 @@
             <PropertyRef Name="L_id" />
           </Key>
           <Property Name="L_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="L_cardID" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_firstName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_lastName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_phoneNo" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -181,6 +186,7 @@
           <Property Name="Rule_borrowingPeriod" Type="Int32" Nullable="false" />
           <Property Name="Rule_reservationLimit" Type="Int32" Nullable="false" />
           <Property Name="Rule_outDateFine" Type="Double" Nullable="false" />
+          <Property Name="Rule_limitRenewBookDay" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -202,6 +208,7 @@
             <EntityTypeMapping TypeName="LibraryModel.Book">
               <MappingFragment StoreEntitySet="Book">
                 <ScalarProperty Name="B_id" ColumnName="B_id" />
+                <ScalarProperty Name="B_qrCode" ColumnName="B_qrCode" />
                 <ScalarProperty Name="B_author" ColumnName="B_author" />
                 <ScalarProperty Name="B_title" ColumnName="B_title" />
                 <ScalarProperty Name="B_ISBN" ColumnName="B_ISBN" />
@@ -232,6 +239,7 @@
             <EntityTypeMapping TypeName="LibraryModel.LibraryUser">
               <MappingFragment StoreEntitySet="LibraryUser">
                 <ScalarProperty Name="L_id" ColumnName="L_id" />
+                <ScalarProperty Name="L_cardID" ColumnName="L_cardID" />
                 <ScalarProperty Name="L_firstName" ColumnName="L_firstName" />
                 <ScalarProperty Name="L_lastName" ColumnName="L_lastName" />
                 <ScalarProperty Name="L_phoneNo" ColumnName="L_phoneNo" />
@@ -269,6 +277,7 @@
                 <ScalarProperty Name="Rule_borrowingPeriod" ColumnName="Rule_borrowingPeriod" />
                 <ScalarProperty Name="Rule_reservationLimit" ColumnName="Rule_reservationLimit" />
                 <ScalarProperty Name="Rule_outDateFine" ColumnName="Rule_outDateFine" />
+                <ScalarProperty Name="Rule_limitRenewBookDay" ColumnName="Rule_limitRenewBookDay" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
