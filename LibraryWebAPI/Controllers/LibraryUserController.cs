@@ -219,6 +219,17 @@ namespace LibraryWebAPI.Controllers
                 db.LibraryUsers.Add(libraryuser);
                 db.SaveChanges();
 
+                try
+                {
+                    libraryuser.L_cardID = libraryuser.L_id.ToString();
+                    db.Entry(libraryuser).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                }
+
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, libraryuser);
                 response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = libraryuser.L_id }));
                 return response;

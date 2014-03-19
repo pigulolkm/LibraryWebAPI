@@ -56,7 +56,7 @@
             <PropertyRef Name="L_id" />
           </Key>
           <Property Name="L_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="L_cardID" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="L_cardID" Type="nvarchar(max)" />
           <Property Name="L_firstName" Type="nvarchar(max)" />
           <Property Name="L_lastName" Type="nvarchar(max)" />
           <Property Name="L_phoneNo" Type="nvarchar(max)" />
@@ -93,6 +93,7 @@
           <Property Name="Rule_reservationLimit" Type="int" Nullable="false" />
           <Property Name="Rule_outDateFine" Type="float" Nullable="false" />
           <Property Name="Rule_limitRenewBookDay" Type="int" Nullable="false" />
+          <Property Name="Rule_unlockPassword" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:StorageModels>
@@ -150,7 +151,7 @@
             <PropertyRef Name="L_id" />
           </Key>
           <Property Name="L_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="L_cardID" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="L_cardID" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_firstName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_lastName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="L_phoneNo" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -187,6 +188,7 @@
           <Property Name="Rule_reservationLimit" Type="Int32" Nullable="false" />
           <Property Name="Rule_outDateFine" Type="Double" Nullable="false" />
           <Property Name="Rule_limitRenewBookDay" Type="Int32" Nullable="false" />
+          <Property Name="Rule_unlockPassword" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -278,6 +280,7 @@
                 <ScalarProperty Name="Rule_reservationLimit" ColumnName="Rule_reservationLimit" />
                 <ScalarProperty Name="Rule_outDateFine" ColumnName="Rule_outDateFine" />
                 <ScalarProperty Name="Rule_limitRenewBookDay" ColumnName="Rule_limitRenewBookDay" />
+                <ScalarProperty Name="Rule_unlockPassword" ColumnName="Rule_unlockPassword" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

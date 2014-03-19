@@ -21,5 +21,6 @@ namespace LibraryWebAPI.Models
         public int Rule_reservationLimit { get; set; }
         public double Rule_outDateFine { get; set; }
         public int Rule_limitRenewBookDay { get; set; }
+        public string Rule_unlockPassword { get; set; }
     }
 }
