@@ -168,31 +168,45 @@ namespace LibraryWebAPI.Controllers
 
             if (ModelState.IsValid)
             {
-                // 1. Check Record is exist and valid (Returned or not)
+                
                 var bookItem = db.Books.Where(b => b.B_id == id);
                 Boolean bookExist = bookItem.Any();
-
+                // 1. Check record is exist 
                 if (bookExist)
                 {
+                    
                     Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals("N")).Any();
                     Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
-
+                    // 2. Check record is valid (Returned or not).                     
                     if (B_record != null && BookIsBorrowed)
                     {
-                        // 2. Check renewal time limit of the record
-                        int renewalLimit = db.Rules.Select(r => r.Rule_renewalLimit).Single();
-                        if (B_record.BR_renewalTimes < renewalLimit)
+                        // 3. Check the renewing book after the limitRenewBookDay(e.g. 7 Days) of the borrowed book date
+                        // 1 : larger than
+                        // 0 : equal
+                        // -1 : smaller than
+                        int limitRenewBookDay = db.Rules.Select(r => r.Rule_limitRenewBookDay).FirstOrDefault();
+                        DateTime allowRenewDate = B_record.BR_datetime.Value.Date.AddDays(limitRenewBookDay);
+                        if (allowRenewDate.CompareTo(DateTime.Now.Date) < 1)
                         {
-                            // 3. Update the renewal time and should returned date
-                            B_record.BR_shouldReturnedDate = B_record.BR_shouldReturnedDate.AddDays(db.Rules.Select(r => r.Rule_borrowingPeriod).Single());
-                            B_record.BR_renewalTimes += 1;
+                            // 4. Check renewal time limit of the record
+                            int renewalLimit = db.Rules.Select(r => r.Rule_renewalLimit).Single();
+                            if (B_record.BR_renewalTimes < renewalLimit)
+                            {
+                                // 5. Update the renewal time and should returned date
+                                B_record.BR_shouldReturnedDate = B_record.BR_shouldReturnedDate.AddDays(db.Rules.Select(r => r.Rule_borrowingPeriod).Single());
+                                B_record.BR_renewalTimes += 1;
 
-                            //4. Create result 
-                            result = new { Result = "True" };
+                                // 6. Create result 
+                                result = new { Result = "True" };
+                            }
+                            else
+                            {
+                                result = new { Result = "False", Message = "The book has arrived the renewal limit." };
+                            }
                         }
                         else
                         {
-                            result = new { Result = "False", Message = "The book has arrived the renewal limit." };
+                            result = new { Result = "False", Message = "The book can be renewed on " + String.Format("{0:dd-MM-yyyy}", allowRenewDate)};
                         }
                     }
                     else
