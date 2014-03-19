@@ -138,6 +138,7 @@ namespace LibraryWebAPI.Controllers
             object[] result = new Object[]{new { result = "False" }};
             string password = json["pw"].ToString();
             string email = json["email"].ToString();
+            String lastLoginTime;
             // STEPS
             // 1. compare password
             // 2. create current time & token (hash(current time + email))
@@ -153,6 +154,7 @@ namespace LibraryWebAPI.Controllers
             if (user.Any())
             {
                 LibraryUser libraryuser = user.SingleOrDefault();
+                lastLoginTime = String.Format("{0:dd-MM-yyyy HH:mm:ss}", libraryuser.L_lastLoginTime);
                 // 2.
                 DateTime currentTime = DateTime.Now;
                 string currentTimeMillis = currentTime.Millisecond.ToString();
@@ -174,7 +176,8 @@ namespace LibraryWebAPI.Controllers
                     result = new Object[] { new { result = HttpStatusCode.NotFound.ToString() } };
                 }
                 // 4.
-                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName, LID = libraryuser.L_id } };
+
+                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName, LID = libraryuser.L_id, lastLoginTime = lastLoginTime } };
             }
             return result;
         }
