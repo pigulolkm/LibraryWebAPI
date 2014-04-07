@@ -9,6 +9,7 @@
           <EntitySet Name="Admin" EntityType="LibraryModel.Store.Admin" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Store.Borrowing_record" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GCM" EntityType="LibraryModel.Store.GCM" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="LibraryUser" EntityType="LibraryModel.Store.LibraryUser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Reservation" EntityType="LibraryModel.Store.Reservation" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Rules" EntityType="LibraryModel.Store.Rules" store:Type="Tables" Schema="dbo" />
@@ -50,6 +51,16 @@
           <Property Name="BR_renewalTimes" Type="int" />
           <Property Name="BR_returnedDate" Type="datetime" />
           <Property Name="BR_shouldReturnedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GCM">
+          <Key>
+            <PropertyRef Name="Gcm_id" />
+          </Key>
+          <Property Name="Gcm_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Gcm_regID" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Gcm_email" Type="nvarchar(max)" />
+          <Property Name="Gcm_created_datetime" Type="datetime" />
+          <Property Name="Gcm_userID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="LibraryUser">
           <Key>
@@ -104,6 +115,7 @@
           <EntitySet Name="Admins" EntityType="LibraryModel.Admin" />
           <EntitySet Name="Books" EntityType="LibraryModel.Book" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Borrowing_record" />
+          <EntitySet Name="GCMs" EntityType="LibraryModel.GCM" />
           <EntitySet Name="LibraryUsers" EntityType="LibraryModel.LibraryUser" />
           <EntitySet Name="Reservations" EntityType="LibraryModel.Reservation" />
           <EntitySet Name="Rules" EntityType="LibraryModel.Rules" />
@@ -145,6 +157,16 @@
           <Property Name="BR_renewalTimes" Type="Int32" />
           <Property Name="BR_returnedDate" Type="DateTime" Precision="3" />
           <Property Name="BR_shouldReturnedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="GCM">
+          <Key>
+            <PropertyRef Name="Gcm_id" />
+          </Key>
+          <Property Name="Gcm_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Gcm_regID" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Gcm_email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Gcm_created_datetime" Type="DateTime" Precision="3" />
+          <Property Name="Gcm_userID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="LibraryUser">
           <Key>
@@ -234,6 +256,17 @@
                 <ScalarProperty Name="BR_renewalTimes" ColumnName="BR_renewalTimes" />
                 <ScalarProperty Name="BR_returnedDate" ColumnName="BR_returnedDate" />
                 <ScalarProperty Name="BR_shouldReturnedDate" ColumnName="BR_shouldReturnedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GCMs">
+            <EntityTypeMapping TypeName="LibraryModel.GCM">
+              <MappingFragment StoreEntitySet="GCM">
+                <ScalarProperty Name="Gcm_id" ColumnName="Gcm_id" />
+                <ScalarProperty Name="Gcm_regID" ColumnName="Gcm_regID" />
+                <ScalarProperty Name="Gcm_email" ColumnName="Gcm_email" />
+                <ScalarProperty Name="Gcm_created_datetime" ColumnName="Gcm_created_datetime" />
+                <ScalarProperty Name="Gcm_userID" ColumnName="Gcm_userID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
