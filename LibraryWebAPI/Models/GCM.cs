@@ -16,7 +16,6 @@ namespace LibraryWebAPI.Models
     {
         public int Gcm_id { get; set; }
         public string Gcm_regID { get; set; }
-        public string Gcm_email { get; set; }
         public Nullable<System.DateTime> Gcm_created_datetime { get; set; }
         public int Gcm_userID { get; set; }
     }

@@ -58,7 +58,6 @@
           </Key>
           <Property Name="Gcm_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Gcm_regID" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Gcm_email" Type="nvarchar(max)" />
           <Property Name="Gcm_created_datetime" Type="datetime" />
           <Property Name="Gcm_userID" Type="int" Nullable="false" />
         </EntityType>
@@ -164,7 +163,6 @@
           </Key>
           <Property Name="Gcm_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="Gcm_regID" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Gcm_email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Gcm_created_datetime" Type="DateTime" Precision="3" />
           <Property Name="Gcm_userID" Type="Int32" Nullable="false" />
         </EntityType>
@@ -264,7 +262,6 @@
               <MappingFragment StoreEntitySet="GCM">
                 <ScalarProperty Name="Gcm_id" ColumnName="Gcm_id" />
                 <ScalarProperty Name="Gcm_regID" ColumnName="Gcm_regID" />
-                <ScalarProperty Name="Gcm_email" ColumnName="Gcm_email" />
                 <ScalarProperty Name="Gcm_created_datetime" ColumnName="Gcm_created_datetime" />
                 <ScalarProperty Name="Gcm_userID" ColumnName="Gcm_userID" />
               </MappingFragment>

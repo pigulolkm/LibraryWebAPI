@@ -224,7 +224,7 @@ namespace LibraryWebAPI.Controllers
 
                 try
                 {
-                    libraryuser.L_cardID = libraryuser.L_id.ToString();
+                    libraryuser.L_cardID =  DateTime.Now.Year.ToString() + "LS" + libraryuser.L_id.ToString();
                     db.Entry(libraryuser).State = EntityState.Modified;
                     db.SaveChanges();
                 }

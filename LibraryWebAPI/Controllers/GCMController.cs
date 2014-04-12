@@ -66,10 +66,12 @@ namespace LibraryWebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                gcm.Gcm_created_datetime = DateTime.Now;
+
                 db.GCMs.Add(gcm);
                 db.SaveChanges();
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, gcm);
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, gcm.Gcm_id);
                 response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = gcm.Gcm_id }));
                 return response;
             }
@@ -99,7 +101,7 @@ namespace LibraryWebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, gcm);
+            return Request.CreateResponse(HttpStatusCode.OK, gcm.Gcm_id);
         }
 
         protected override void Dispose(bool disposing)
