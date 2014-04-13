@@ -9,6 +9,9 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using LibraryWebAPI.Models;
+using System.Text;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace LibraryWebAPI.Controllers
 {
@@ -102,6 +105,57 @@ namespace LibraryWebAPI.Controllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, gcm.Gcm_id);
+        }
+
+        public String PostAnnouncement(string msg)
+        {
+            string applicationID = "AIzaSyBRGAevWCGpSXntIC9v7KZrfesCf21PQc0";
+            string senderID = "1007963483160";
+
+            WebRequest request = WebRequest.Create("https://android.googleapis.com/gcm/send");
+            request.Method = "post";
+            request.ContentType = "application/json";
+            request.Headers.Add(string.Format("Authorization: key={0}", applicationID));
+            request.Headers.Add(string.Format("Sender: id={0}", senderID));
+
+            String[] regIDs = db.GCMs.Select(g => g.Gcm_regID).ToArray();
+
+            object json =   new { 
+                                    delay_while_idle = false,
+                                    data =  new { 
+                                                    message = msg 
+                                                }, 
+                                    registration_ids = regIDs
+                                };
+
+            string postData = JsonConvert.SerializeObject(json);
+
+            System.Diagnostics.Debug.Write(postData);
+
+            Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+            request.ContentLength = byteArray.Length;
+
+            Stream dataStream = request.GetRequestStream();
+
+            dataStream.Write(byteArray, 0, byteArray.Length);
+
+            dataStream.Close();
+
+            WebResponse tResponse = request.GetResponse();
+
+            dataStream = tResponse.GetResponseStream();
+
+            StreamReader tReader = new StreamReader(dataStream);
+
+            String sResponseFromServer = tReader.ReadToEnd();   //Get response from GCM server.
+
+            tReader.Close();
+
+            dataStream.Close();
+            tResponse.Close();
+
+            return sResponseFromServer;
         }
 
         protected override void Dispose(bool disposing)
