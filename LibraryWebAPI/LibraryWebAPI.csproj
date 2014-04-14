@@ -202,6 +202,7 @@
     <Compile Include="Models\LibraryUser.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\NotificationMessage.cs" />
     <Compile Include="Models\Reservation.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>

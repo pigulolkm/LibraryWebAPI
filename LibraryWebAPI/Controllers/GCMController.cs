@@ -107,7 +107,7 @@ namespace LibraryWebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, gcm.Gcm_id);
         }
 
-        public String PostAnnouncement(string msg)
+        public String PostAnnouncement(NotificationMessage notificationMessage)
         {
             string applicationID = "AIzaSyBRGAevWCGpSXntIC9v7KZrfesCf21PQc0";
             string senderID = "1007963483160";
@@ -122,8 +122,8 @@ namespace LibraryWebAPI.Controllers
 
             object json =   new { 
                                     delay_while_idle = false,
-                                    data =  new { 
-                                                    message = msg 
+                                    data =  new {
+                                                    message = notificationMessage.msg 
                                                 }, 
                                     registration_ids = regIDs
                                 };
