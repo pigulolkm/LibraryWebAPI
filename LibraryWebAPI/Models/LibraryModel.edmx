@@ -7,6 +7,7 @@
       <Schema Namespace="LibraryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="LibraryModelStoreContainer">
           <EntitySet Name="Admin" EntityType="LibraryModel.Store.Admin" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Announcement" EntityType="LibraryModel.Store.Announcement" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Book" EntityType="LibraryModel.Store.Book" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Store.Borrowing_record" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GCM" EntityType="LibraryModel.Store.GCM" store:Type="Tables" Schema="dbo" />
@@ -22,6 +23,14 @@
           <Property Name="Admin_password" Type="nvarchar(max)" />
           <Property Name="Admin_token" Type="nvarchar(max)" />
           <Property Name="Admin_lastLoginTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Announcement">
+          <Key>
+            <PropertyRef Name="A_id" />
+          </Key>
+          <Property Name="A_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="A_content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="A_datetime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Book">
           <Key>
@@ -112,6 +121,7 @@
       <Schema Namespace="LibraryModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="LibraryEntities" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Admins" EntityType="LibraryModel.Admin" />
+          <EntitySet Name="Announcements" EntityType="LibraryModel.Announcement" />
           <EntitySet Name="Books" EntityType="LibraryModel.Book" />
           <EntitySet Name="Borrowing_record" EntityType="LibraryModel.Borrowing_record" />
           <EntitySet Name="GCMs" EntityType="LibraryModel.GCM" />
@@ -127,6 +137,14 @@
           <Property Name="Admin_password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Admin_token" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Admin_lastLoginTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Announcement">
+          <Key>
+            <PropertyRef Name="A_id" />
+          </Key>
+          <Property Name="A_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="A_content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="A_datetime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="Book">
           <Key>
@@ -223,6 +241,15 @@
                 <ScalarProperty Name="Admin_password" ColumnName="Admin_password" />
                 <ScalarProperty Name="Admin_token" ColumnName="Admin_token" />
                 <ScalarProperty Name="Admin_lastLoginTime" ColumnName="Admin_lastLoginTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Announcements">
+            <EntityTypeMapping TypeName="LibraryModel.Announcement">
+              <MappingFragment StoreEntitySet="Announcement">
+                <ScalarProperty Name="A_id" ColumnName="A_id" />
+                <ScalarProperty Name="A_content" ColumnName="A_content" />
+                <ScalarProperty Name="A_datetime" ColumnName="A_datetime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

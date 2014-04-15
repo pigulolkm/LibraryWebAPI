@@ -26,6 +26,7 @@ namespace LibraryWebAPI.Models
         }
     
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Borrowing_record> Borrowing_record { get; set; }
         public DbSet<GCM> GCMs { get; set; }
