@@ -9,6 +9,9 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using LibraryWebAPI.Models;
+using Newtonsoft.Json;
+using System.Text;
+using System.IO;
 
 namespace LibraryWebAPI.Controllers
 {
@@ -71,21 +74,84 @@ namespace LibraryWebAPI.Controllers
         }
 
         // POST api/Announcement
-        public HttpResponseMessage PostAnnouncement(Announcement announcement)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Announcements.Add(announcement);
-                db.SaveChanges();
+        //public HttpResponseMessage PostAnnouncement(Announcement announcement)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Announcements.Add(announcement);
+        //        db.SaveChanges();
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, announcement);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = announcement.A_id }));
-                return response;
-            }
-            else
+        //        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, announcement);
+        //        response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = announcement.A_id }));
+        //        return response;
+        //    }
+        //    else
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+        //    }
+        //}
+
+        public String PostAnnouncement(NotificationMessage notificationMessage)
+        {
+            string applicationID = "AIzaSyBRGAevWCGpSXntIC9v7KZrfesCf21PQc0";
+            string senderID = "1007963483160";
+
+            // Add to db
+            Announcement ann = new Announcement
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
+                A_content = notificationMessage.msg,
+                A_datetime = DateTime.Now                
+            };
+            db.Announcements.Add(ann);
+            db.SaveChanges();
+
+            // Push notification creation
+            WebRequest request = WebRequest.Create("https://android.googleapis.com/gcm/send");
+            request.Method = "post";
+            request.ContentType = "application/json;charset=UTF-8";
+            request.Headers.Add(string.Format("Authorization: key={0}", applicationID));
+            request.Headers.Add(string.Format("Sender: id={0}", senderID));
+
+            String[] regIDs = db.GCMs.Select(g => g.Gcm_regID).ToArray();
+
+            object json = new
+            {
+                delay_while_idle = false,
+                data = new
+                {
+                    message = notificationMessage.msg
+                },
+                registration_ids = regIDs
+            };
+
+            string postData = JsonConvert.SerializeObject(json);
+
+            System.Diagnostics.Debug.Write(postData);
+
+            Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+            request.ContentLength = byteArray.Length;
+
+            Stream dataStream = request.GetRequestStream();
+
+            dataStream.Write(byteArray, 0, byteArray.Length);
+
+            dataStream.Close();
+
+            WebResponse tResponse = request.GetResponse();
+
+            dataStream = tResponse.GetResponseStream();
+
+            StreamReader tReader = new StreamReader(dataStream);
+
+            String sResponseFromServer = tReader.ReadToEnd();   //Get response from GCM server.
+
+            tReader.Close();
+
+            dataStream.Close();
+            tResponse.Close();
+
+            return sResponseFromServer;
         }
 
         // DELETE api/Announcement/5
