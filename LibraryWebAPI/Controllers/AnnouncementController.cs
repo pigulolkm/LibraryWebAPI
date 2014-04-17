@@ -22,7 +22,7 @@ namespace LibraryWebAPI.Controllers
         // GET api/Announcement
         public IEnumerable<Announcement> GetAnnouncements()
         {
-            return db.Announcements.AsEnumerable();
+            return db.Announcements.OrderByDescending(a => a.A_datetime).AsEnumerable();
         }
 
         // GET api/Announcement
