@@ -154,6 +154,10 @@ namespace LibraryWebAPI.Controllers
             if (user.Any())
             {
                 LibraryUser libraryuser = user.SingleOrDefault();
+
+                int bAmount = db.Borrowing_record.Where(br => br.L_id == libraryuser.L_id && br.BR_returnedDate.Equals(null)).Count();
+                int bLimit = db.Rules.Select(r => r.Rule_borrowingLimit).Single();
+
                 lastLoginTime = String.Format("{0:dd-MM-yyyy HH:mm:ss}", libraryuser.L_lastLoginTime);
                 // 2.
                 DateTime currentTime = DateTime.Now;
@@ -177,7 +181,7 @@ namespace LibraryWebAPI.Controllers
                 }
                 // 4.
 
-                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName, LID = libraryuser.L_id, lastLoginTime = lastLoginTime } };
+                result = new Object[] { new { result = "True", token = token, name = libraryuser.L_lastName, LID = libraryuser.L_id, lastLoginTime = lastLoginTime, borrowedAmount = bAmount, borrowingLimit = bLimit } };
             }
             return result;
         }
