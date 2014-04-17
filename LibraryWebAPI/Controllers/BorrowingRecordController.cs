@@ -11,6 +11,7 @@ using System.Web.Http;
 using LibraryWebAPI.Models;
 using System.Collections;
 using Newtonsoft.Json;
+using LibraryWebAPI.Utils;
 
 namespace LibraryWebAPI.Controllers
 {
@@ -94,7 +95,7 @@ namespace LibraryWebAPI.Controllers
 
                 if (bookExist)
                 {
-                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals("N")).Any();
+                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals(Util.BookStatus_BORROWED)).Any();
                     Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
 
                     if (B_record != null && BookIsBorrowed)
@@ -110,9 +111,11 @@ namespace LibraryWebAPI.Controllers
                         // Update the borrowing record
                         B_record.BR_returnedDate = now;
 
+                        // TODO check reservation exist to define the book status below
+
                         // Update Book Status for others to borrrow
                         Book book = bookItem.Single();
-                        book.B_status = "Y";
+                        book.B_status = Util.BookStatus_ONTHESHELF;
 
                         // Create ReturnBooks item for displaying
                         returnBooks = new ReturnBooks()
@@ -175,7 +178,7 @@ namespace LibraryWebAPI.Controllers
                 if (bookExist)
                 {
                     
-                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals("N")).Any();
+                    Boolean BookIsBorrowed = bookItem.Where(b => b.B_status.Equals(Util.BookStatus_BORROWED)).Any();
                     Borrowing_record B_record = db.Borrowing_record.Where(br => br.B_id == id && br.BR_returnedDate == null).SingleOrDefault();
                     // 2. Check record is valid (Returned or not).                     
                     if (B_record != null && BookIsBorrowed)
@@ -253,7 +256,11 @@ namespace LibraryWebAPI.Controllers
                 foreach (Borrowing_record br in borrowing_record)
                 {
                     var bookItem = db.Books.Where(b => b.B_id == br.B_id);
-                    bool availalbe = bookItem.Where(b => b.B_status.Equals("Y")).Any();
+                    bool availalbe = (from b in db.Books
+                                      where b.B_status.Equals(Util.BookStatus_BORROWED) ||
+                                      b.B_status.Equals(Util.BookStatus_RESERVED)
+                                      select b).Any();
+         
                     if (availalbe)
                     {
                         // Create borrowing record
@@ -263,7 +270,7 @@ namespace LibraryWebAPI.Controllers
 
                         // Update book status
                         Book book = bookItem.Single();
-                        book.B_status = "N";
+                        book.B_status = Util.BookStatus_BORROWED;
 
                         // Create BorrowBook item for displaying
                         BorrowBooks b = new BorrowBooks()
