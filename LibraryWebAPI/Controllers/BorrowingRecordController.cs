@@ -256,7 +256,7 @@ namespace LibraryWebAPI.Controllers
                 foreach (Borrowing_record br in borrowing_record)
                 {
                     var bookItem = db.Books.Where(b => b.B_id == br.B_id);
-                    bool availalbe = (from b in db.Books
+                    bool availalbe = (from b in bookItem
                                       where b.B_status.Equals(Util.BookStatus_ONTHESHELF) ||
                                       b.B_status.Equals(Util.BookStatus_RESERVED)
                                       select b).Any();
