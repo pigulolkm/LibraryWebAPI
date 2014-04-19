@@ -34,24 +34,24 @@ namespace LibraryWebAPI.Controllers
             return book;
         }
 
-        // GET api/Book/GetBookByKey?searchKey=...&searchOption=...
-        public IEnumerable<Book> GetBookByKey(string searchKey, string searchOption)
+        // GET api/Book/PostGetBookByKey?searchKey=...&searchOption=...
+        public IEnumerable<Book> PostGetBookByKey(SearchBooks searchBooks)
         {
             var books = (IEnumerable<Book>)null;
-            switch(searchOption)
+            switch (searchBooks.searchOption)
             {
-                case "Author":      books =  from b in db.Books where b.B_author.Contains(searchKey) select b;
-                                    break;
-                case "Title":       books = from b in db.Books where b.B_title.Contains(searchKey) select b;
-                                    break;
-                case "Subject":     books = from b in db.Books where b.B_subject.Contains(searchKey) select b;
-                                    break;
-                case "Publisher":   books = from b in db.Books where b.B_publisher.Contains(searchKey) select b;
-                                    break;
-                case "ISBN":        books = from b in db.Books where b.B_ISBN.Equals(searchKey) select b;
-                                    break;
-                case "ScanCode":   books = from b in db.Books where b.B_ISBN.Equals(searchKey) select b;
-                                    break;
+                case "Author": books = from b in db.Books where b.B_author.Contains(searchBooks.searchKey) select b;
+                                        break;
+                case "Title": books = from b in db.Books where b.B_title.Contains(searchBooks.searchKey) select b;
+                                        break;
+                case "Subject": books = from b in db.Books where b.B_subject.Contains(searchBooks.searchKey) select b;
+                                        break;
+                case "Publisher": books = from b in db.Books where b.B_publisher.Contains(searchBooks.searchKey) select b;
+                                        break;
+                case "ISBN": books = from b in db.Books where b.B_ISBN.Equals(searchBooks.searchKey) select b;
+                                        break;
+                case "ScanCode": books = from b in db.Books where b.B_ISBN.Equals(searchBooks.searchKey) select b;
+                                        break;
             }
 
             return books.AsEnumerable();
