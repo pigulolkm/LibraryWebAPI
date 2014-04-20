@@ -10,5 +10,6 @@ namespace LibraryWebAPI.Utils
         public static String BookStatus_ONTHESHELF = "On the shelf";
 	    public static String BookStatus_BORROWED = "Borrowed";
 	    public static String BookStatus_RESERVED = "Reserved";
+        public static int Reservation_AmountForEachBook = 13;
     }
 }
