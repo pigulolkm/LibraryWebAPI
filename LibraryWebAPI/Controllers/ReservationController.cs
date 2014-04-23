@@ -36,6 +36,39 @@ namespace LibraryWebAPI.Controllers
             return reservation;
         }
 
+        public Object GetReservationByUser(int id, String token)
+        {
+            bool valid = db.LibraryUsers.Where(lb => lb.L_id == id && lb.L_token.Equals(token)).Any();
+            object result = new object { };
+            if (valid)
+            {
+
+                var activeReservations = from b in db.Books
+                                         join re in ( from r in db.Reservations
+                                                      where r.L_id == id &
+                                                      r.R_isActivated == true
+                                                      orderby r.R_datetime ascending
+                                                      select r)
+                                         on b.B_id equals re.B_id
+                                         select new { Book = b, Reservation = re};
+                                        
+
+               var nonActiveReservations =  from b in db.Books
+                                            join re in (  from r in db.Reservations
+                                                       where r.L_id == id &
+                                                       r.R_isActivated == false &
+                                                       r.R_finishDatetime != null
+                                                       orderby r.R_finishDatetime descending
+                                                       select r)
+                                            on b.B_id equals re.B_id
+                                            select new { Book = b, Reservation = re };
+
+               result = new { Reservations = activeReservations.ToArray().Concat(nonActiveReservations.ToArray()) };
+            }
+
+            return result;
+        }
+
         // PUT api/Reservation/5
         public HttpResponseMessage PutReservation(int id, Reservation reservation)
         {
