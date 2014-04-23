@@ -111,12 +111,27 @@ namespace LibraryWebAPI.Controllers
                         // Update the borrowing record
                         B_record.BR_returnedDate = now;
 
-                        // TODO check reservation exist to define the book status below
-
-                        // Update Book Status for others to borrrow
                         Book book = bookItem.Single();
-                        book.B_status = Util.BookStatus_ONTHESHELF;
 
+                        /// Check if reserved
+                        var re =  db.Reservations.Where(r => r.B_id == id & r.R_isActivated == true & r.R_finishDatetime == null).OrderBy(r => r.R_datetime);
+                        bool isReserved = re.Any();
+                        if (isReserved)
+                        { 
+                            Reservation reservation = re.First();
+                            GCM gcm = db.GCMs.Where(g => g.Gcm_userID == reservation.L_id).Single();
+                            Util.sendNotificationMsg("Reservation remind", new String[]{ gcm.Gcm_regID });
+
+                            reservation.R_finishDatetime = DateTime.Now;
+                            reservation.R_getBookDate = DateTime.Now.AddDays(Util.Reservation_getBookDays);
+
+                            book.B_status = Util.BookStatus_RESERVED;
+                        }
+                        else
+                        {
+                            // Update Book Status for others to borrrow
+                            book.B_status = Util.BookStatus_ONTHESHELF;
+                        }
                         // Create ReturnBooks item for displaying
                         returnBooks = new ReturnBooks()
                         {
