@@ -35,7 +35,7 @@ namespace LibraryWebAPI.Controllers
         }
 
         // GET api/Book/PostGetBookByKey?searchKey=...&searchOption=...
-        public IEnumerable<Book> PostGetBookByKey(SearchBooks searchBooks)
+        public Object PostGetBookByKey(SearchBooks searchBooks)
         {
             var books = (IEnumerable<Book>)null;
             switch (searchBooks.searchOption)
@@ -54,7 +54,17 @@ namespace LibraryWebAPI.Controllers
                                         break;
             }
 
-            return books.AsEnumerable();
+            var booksWithReservationAmounts = (from b in books
+                                               join a in (  from r in db.Reservations
+                                                            where r.R_isActivated == true &
+                                                            r.R_finishDatetime == null
+                                                            select r)
+                                               on b.B_id equals a.B_id
+                                               into ab
+                                               select new { Book = b, Count = ab.Count() });
+            
+
+            return booksWithReservationAmounts.AsEnumerable();
         }
 
         // PUT api/Book/5
