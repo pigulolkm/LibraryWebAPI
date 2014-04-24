@@ -47,23 +47,31 @@ namespace LibraryWebAPI.Controllers
                                          join re in ( from r in db.Reservations
                                                       where r.L_id == id &
                                                       r.R_isActivated == true
-                                                      orderby r.R_datetime ascending
                                                       select r)
                                          on b.B_id equals re.B_id
+                                         orderby re.R_datetime ascending
                                          select new { Book = b, Reservation = re};
+
+                var activeReservationWithGetBook = from a in activeReservations
+                                                   where a.Reservation.R_getBookDate != null
+                                                   select a;
+
+                var activeReservationWithoutGetBook = from a in activeReservations
+                                                      where a.Reservation.R_getBookDate == null
+                                                      select a;
                                         
 
-               var nonActiveReservations =  from b in db.Books
+                var nonActiveReservations =  from b in db.Books
                                             join re in (  from r in db.Reservations
                                                        where r.L_id == id &
                                                        r.R_isActivated == false &
                                                        r.R_finishDatetime != null
-                                                       orderby r.R_finishDatetime descending
                                                        select r)
                                             on b.B_id equals re.B_id
+                                            orderby re.R_finishDatetime descending
                                             select new { Book = b, Reservation = re };
 
-               result = new { Reservations = activeReservations.ToArray().Concat(nonActiveReservations.ToArray()) };
+                result = new { Reservations = activeReservationWithGetBook.ToArray().Concat(activeReservationWithoutGetBook.ToArray()).Concat(nonActiveReservations.ToArray()) };
             }
 
             return result;
@@ -73,38 +81,45 @@ namespace LibraryWebAPI.Controllers
         // Cancel Reservation
         public HttpResponseMessage PutReservation(string token, Reservation reservation)
         {
-            if (!ModelState.IsValid)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
             bool valid = db.LibraryUsers.Where(lb => lb.L_id == reservation.L_id && lb.L_token.Equals(token)).Any();
             object result = new object { };
 
             if (valid)
             {
-                reservation.R_finishDatetime = DateTime.Now;
-                reservation.R_isActivated = false;
+                if (reservation.R_getBookDate == null)
+                {
+                    reservation.R_finishDatetime = DateTime.Now;
+                    reservation.R_isActivated = false;
+                    reservation.R_getBookDate = null;
 
-                db.Entry(reservation).State = EntityState.Modified;
+                    db.Entry(reservation).State = EntityState.Modified;
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        response = Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                    }
+
+                    result = new { Result = true, Message = "The Reservation is Cancelled" };
+                }
+                else
+                {
+                    result = new { Result = false, Message = "The reservation cannot be cancelled" };
+                }
             }
             else
             {
                 result = new { Result = false, Message = "Not a valid user" };
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, result.ToString());
+                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, result.ToString());
             }
+            
+            response.Content = new StringContent(JsonConvert.SerializeObject(result));
 
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
-            }
-
-            result = new { Result = true, Message = "The Reservation is Cancelled" };
-            return Request.CreateResponse(HttpStatusCode.OK, result.ToString());
+            return response;
         }
 
         // POST api/Reservation
