@@ -70,19 +70,29 @@ namespace LibraryWebAPI.Controllers
         }
 
         // PUT api/Reservation/5
-        public HttpResponseMessage PutReservation(int id, Reservation reservation)
+        // Cancel Reservation
+        public HttpResponseMessage PutReservation(string token, Reservation reservation)
         {
             if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
-            if (id != reservation.R_id)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
+            bool valid = db.LibraryUsers.Where(lb => lb.L_id == reservation.L_id && lb.L_token.Equals(token)).Any();
+            object result = new object { };
 
-            db.Entry(reservation).State = EntityState.Modified;
+            if (valid)
+            {
+                reservation.R_finishDatetime = DateTime.Now;
+                reservation.R_isActivated = false;
+
+                db.Entry(reservation).State = EntityState.Modified;
+            }
+            else
+            {
+                result = new { Result = false, Message = "Not a valid user" };
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, result.ToString());
+            }
 
             try
             {
@@ -93,7 +103,8 @@ namespace LibraryWebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            result = new { Result = true, Message = "The Reservation is Cancelled" };
+            return Request.CreateResponse(HttpStatusCode.OK, result.ToString());
         }
 
         // POST api/Reservation
