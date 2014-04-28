@@ -120,12 +120,13 @@ namespace LibraryWebAPI.Controllers
                         { 
                             Reservation reservation = re.First();
                             GCM gcm = db.GCMs.Where(g => g.Gcm_userID == reservation.L_id).Single();
-                            Util.sendNotificationMsg("Reservation remind", new String[]{ gcm.Gcm_regID });
 
                             reservation.R_finishDatetime = DateTime.Now;
                             reservation.R_getBookDate = DateTime.Now.AddDays(Util.Reservation_getBookDays);
 
                             book.B_status = Util.BookStatus_RESERVED;
+
+                            Util.sendNotificationMsg("Reservation remind : \n" + book.B_title + " can be borrowed before " + DateTime.Now.AddDays(Util.Reservation_getBookDays).ToShortDateString(), new String[] { gcm.Gcm_regID });
                         }
                         else
                         {
@@ -139,7 +140,8 @@ namespace LibraryWebAPI.Controllers
                             title = book.B_title,
                             publisher = book.B_publisher,
                             publicationDate = book.B_publicationDate,
-                            fine = fine
+                            fine = fine,
+                            isReserved = isReserved
                         };
 
                         result = new { Result = "True", ReturnBooks = returnBooks };

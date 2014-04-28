@@ -13,5 +13,6 @@ namespace LibraryWebAPI.Models
         public String publicationDate { get; set; }
         public System.DateTime returnedDate { get; set; }
         public double fine { get; set; }
+        public bool isReserved { get; set; }
     }
 }
