@@ -63,6 +63,7 @@ namespace LibraryWebAPI.Controllers
                                     };
 
                 result = new { BorrowingRecord = notReturnedRecords.ToArray().Concat(returnRecords.ToArray()),
+                               NonReturnedRecord = notReturnedRecords.ToArray(),
                                BorrowedAmount = returnRecords.Count() + notReturnedRecords.Count(),
                                NonReturnedAmount = notReturnedRecords.Count()
                              };
