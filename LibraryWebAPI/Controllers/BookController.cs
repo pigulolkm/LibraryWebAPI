@@ -54,6 +54,45 @@ namespace LibraryWebAPI.Controllers
                                         break;
             }
 
+            if (searchBooks.searchKey2.Count() > 0)
+            {
+                switch (searchBooks.searchOption2)
+                {
+                    case "Author": books = from b in books where b.B_author.Contains(searchBooks.searchKey2) select b;
+                        break;
+                    case "Title": books = from b in books where b.B_title.Contains(searchBooks.searchKey2) select b;
+                        break;
+                    case "Subject": books = from b in books where b.B_subject.Contains(searchBooks.searchKey2) select b;
+                        break;
+                    case "Publisher": books = from b in books where b.B_publisher.Contains(searchBooks.searchKey2) select b;
+                        break;
+                    case "ISBN": books = from b in books where b.B_ISBN.Equals(searchBooks.searchKey2) select b;
+                        break;
+                    case "ScanCode": books = from b in books where b.B_ISBN.Equals(searchBooks.searchKey2) select b;
+                        break;
+                }
+            }
+
+            if (searchBooks.searchKey3.Count() > 0)
+            {
+                switch (searchBooks.searchOption3)
+                {
+                    case "Author": books = from b in books where b.B_author.Contains(searchBooks.searchKey3) select b;
+                        break;
+                    case "Title": books = from b in books where b.B_title.Contains(searchBooks.searchKey3) select b;
+                        break;
+                    case "Subject": books = from b in books where b.B_subject.Contains(searchBooks.searchKey3) select b;
+                        break;
+                    case "Publisher": books = from b in books where b.B_publisher.Contains(searchBooks.searchKey3) select b;
+                        break;
+                    case "ISBN": books = from b in books where b.B_ISBN.Equals(searchBooks.searchKey3) select b;
+                        break;
+                    case "ScanCode": books = from b in books where b.B_ISBN.Equals(searchBooks.searchKey3) select b;
+                        break;
+                }
+            }
+
+
             var booksWithReservationAmounts = (from b in books
                                                join a in (  from r in db.Reservations
                                                             where r.R_isActivated == true &
